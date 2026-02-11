@@ -3,35 +3,22 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AZIMUTH 2026 - Innovation Challenge</title>
+    <title>AZIMUTH 2026</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        /* FIXED TECH BACKGROUND */
         #bg-container {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             background-color: #020617;
             background-image: 
-                linear-gradient(rgba(30, 58, 138, 0.3) 1.5px, transparent 1.5px),
-                linear-gradient(90deg, rgba(30, 58, 138, 0.3) 1.5px, transparent 1.5px);
-            background-size: 60px 60px;
-            z-index: -2;
-            animation: pulseGrid 12s ease-in-out infinite;
+                linear-gradient(rgba(30, 58, 138, 0.25) 1.5px, transparent 1.5px),
+                linear-gradient(90deg, rgba(30, 58, 138, 0.25) 1.5px, transparent 1.5px);
+            background-size: 50px 50px; z-index: -2;
         }
-
-        @keyframes pulseGrid {
-            0%, 100% { background-size: 60px 60px; }
-            50% { background-size: 65px 65px; }
-        }
-
         .cyber-glow {
-            position: fixed;
-            width: 100vw; height: 100vh;
-            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(59, 130, 246, 0.15) 0%, transparent 50%);
-            z-index: -1;
-            pointer-events: none;
+            position: fixed; width: 100vw; height: 100vh;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(59, 130, 246, 0.12) 0%, transparent 50%);
+            z-index: -1; pointer-events: none;
         }
-
         .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
         @keyframes shake {
             10%, 90% { transform: translate3d(-1px, 0, 0); }
@@ -39,39 +26,37 @@
             30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
             40%, 60% { transform: translate3d(4px, 0, 0); }
         }
-
-        .option-btn { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; -webkit-tap-highlight-color: transparent; }
-        .correct { background-color: #059669 !important; border-color: #10b981 !important; box-shadow: 0 0 40px rgba(16, 185, 129, 0.6); transform: scale(1.04); color: white; }
+        .option-btn { transition: all 0.2s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        .correct { background-color: #059669 !important; border-color: #10b981 !important; box-shadow: 0 0 30px rgba(16, 185, 129, 0.6); transform: scale(1.02); color: white; }
         .wrong { background-color: #dc2626 !important; border-color: #ef4444 !important; opacity: 0.8; color: white; }
-        .strike-active { background-color: #ef4444 !important; border-color: #ef4444 !important; color: white !important; box-shadow: 0 0 25px rgba(239, 68, 68, 0.7); }
+        .strike-active { background-color: #ef4444 !important; border-color: #ef4444 !important; color: white !important; box-shadow: 0 0 20px rgba(239, 68, 68, 0.7); }
     </style>
 </head>
-<body class="text-white font-sans min-h-screen flex items-center justify-center m-0 p-0">
+<body class="text-white font-sans h-screen flex flex-col items-center justify-center m-0 p-0 overflow-hidden">
     <div id="bg-container"></div>
     <div class="cyber-glow" id="glow"></div>
     
-    <div id="main-wrapper" class="relative z-10 w-full max-w-5xl px-4 py-8">
-        <header class="text-center mb-10">
-            <h1 class="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-br from-blue-400 via-cyan-300 to-emerald-400 tracking-tighter drop-shadow-2xl">AZIMUTH 2026</h1>
-            
-            <div class="flex justify-center gap-10 mt-10">
-                <div id="strike-1" class="w-16 h-16 rounded-[1.2rem] border-2 border-slate-800 flex items-center justify-center font-black text-4xl transition-all text-slate-800 bg-slate-900/90">X</div>
-                <div id="strike-2" class="w-16 h-16 rounded-[1.2rem] border-2 border-slate-800 flex items-center justify-center font-black text-4xl transition-all text-slate-800 bg-slate-900/90">X</div>
+    <div id="main-wrapper" class="relative z-10 w-full max-w-5xl px-4 flex flex-col items-center">
+        <header class="text-center mb-4">
+            <h1 class="text-4xl md:text-6xl font-black text-transparent bg-clip-text bg-gradient-to-br from-blue-400 via-cyan-300 to-emerald-400 tracking-tighter">AZIMUTH 2026</h1>
+            <div class="flex justify-center gap-6 mt-4">
+                <div id="strike-1" class="w-12 h-12 rounded-xl border-2 border-slate-800 flex items-center justify-center font-black text-2xl text-slate-800 bg-slate-900/90">X</div>
+                <div id="strike-2" class="w-12 h-12 rounded-xl border-2 border-slate-800 flex items-center justify-center font-black text-2xl text-slate-800 bg-slate-900/90">X</div>
             </div>
         </header>
 
-        <div id="question-card" class="bg-slate-900/90 backdrop-blur-3xl p-10 md:p-16 rounded-[3.5rem] shadow-[0_0_100px_rgba(0,0,0,0.8)] border border-blue-500/20">
-            <div class="flex justify-between items-center mb-12">
-                <span id="set-name" class="bg-blue-600/20 text-blue-400 border border-blue-500/40 px-8 py-2.5 rounded-full text-xs font-black uppercase tracking-[0.3em]"></span>
-                <span id="question-counter" class="text-slate-600 font-mono font-black text-xl"></span>
+        <div id="question-card" class="bg-slate-900/95 backdrop-blur-2xl p-6 md:p-10 rounded-[2.5rem] shadow-2xl border border-blue-500/20 w-full">
+            <div class="flex justify-between items-center mb-6">
+                <span id="set-name" class="bg-blue-600/20 text-blue-400 border border-blue-500/40 px-5 py-1 rounded-full text-[10px] font-black uppercase tracking-widest"></span>
+                <span id="question-counter" class="text-slate-600 font-mono font-black text-lg"></span>
             </div>
             
-            <h2 id="question-text" class="text-3xl md:text-5xl font-bold mb-16 leading-tight"></h2>
-            <div id="options-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
+            <h2 id="question-text" class="text-xl md:text-3xl font-bold mb-8 leading-tight"></h2>
+            <div id="options-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </div>
     </div>
 
-    <button onclick="nextQuestion()" class="fixed bottom-10 right-10 z-50 bg-white/5 hover:bg-white/10 px-6 py-4 rounded-2xl border border-white/10 text-white/30 hover:text-white transition-all text-xs font-black uppercase">SKIP →</button>
+    <button onclick="nextQuestion()" class="fixed bottom-6 right-6 z-50 bg-white/5 hover:bg-white/10 px-4 py-2 rounded-xl border border-white/10 text-white/30 text-[10px] font-black uppercase">SKIP →</button>
 
     <script>
         const quizData = [
@@ -128,21 +113,21 @@
             { set: "Current Affairs", q: "Which port is India’s largest container port by throughput?", options: ["Mundra", "JNPA", "Chennai", "Kochi"], a: 1 },
             { set: "Current Affairs", q: "Which shipyard built India’s first aircraft carrier INS Vikrant?", options: ["Mazagon Dock", "Garden Reach", "Cochin Shipyard Limited", "Goa Shipyard"], a: 2 },
             { set: "Current Affairs", q: "When is National Maritime Day celebrated in India?", options: ["January 26", "April 5th", "August 15", "December 4"], a: 1 },
-            { set: "Current Affairs", q: "World’s largest container ship by TEU capacity (2024–25)?", options: ["Ever Given", "MSC Irina", "Maersk Mc-Kinney", "HMM Algeciras"], a: 1 },
-            { set: "Regulations", q: "Which document must be produced to prove fuel Sulfur compliance?", options: ["Logbook", "BDN (Bunker Delivery Note)", "Bill of Lading", "Manifest"], a: 1 },
-            { set: "Regulations", q: "Which convention regulates ship recycling and safe dismantling?", options: ["SOLAS", "HKC (Hong Kong Convention)", "MARPOL", "BWM"], a: 1 },
-            { set: "Regulations", q: "Which sea route faced major security disruptions in 2024–25?", options: ["Malacca Strait", "Red Sea", "English Channel", "Panama"], a: 1 },
-            { set: "Regulations", q: "Energy efficiency plan required to be carried onboard ships?", options: ["SOPEP", "SEEMP", "ISM", "ISPS"], a: 1 },
-            { set: "Regulations", q: "Which code made safety management systems mandatory?", options: ["ISM Code", "ISPS Code", "IMDG Code", "STCW"], a: 0 },
-            { set: "Regulations", q: "What is the maximum validity of a Safety Management Certificate?", options: ["2 years", "5 years", "1 year", "10 years"], a: 1 },
-            { set: "Regulations", q: "What term is used for supplying shore-based electricity to ships?", options: ["Cold ironing", "Live docking", "Grid linking", "Shore power"], a: 0 },
-            { set: "Regulations", q: "Which IMO code addresses safety for ships in polar waters?", options: ["Ice Code", "Polar Code", "Arctic Protocol", "Cold Code"], a: 1 },
-            { set: "Current Affairs", q: "Which port is the world’s busiest container port by throughput?", options: ["Singapore", "Shanghai", "Rotterdam", "Dubai"], a: 1 },
-            { set: "Current Affairs", q: "Which Indian port is India’s largest private (non-major) port?", options: ["Ennore", "Mundra Port", "Pipavav", "Dhamra"], a: 1 },
-            { set: "Regulations", q: "Which MARPOL Annex deals with prevention of air pollution?", options: ["Annex I", "Annex VI", "Annex IV", "Annex II"], a: 1 },
-            { set: "Current Affairs", q: "Which country is India’s partner in the SIMBEX maritime exercise?", options: ["USA", "Singapore", "Russia", "France"], a: 1 },
-            { set: "Regulations", q: "What does VTS stand for in maritime operations?", options: ["Vessel Traffic Service", "Virtual Tracking", "Vessel Time System", "Vector Trip"], a: 0 },
-            { set: "Regulations", q: "Which strait connects the Persian Gulf with the Gulf of Oman?", options: ["Hormuz", "Malacca", "Gibraltar", "Bab-el-Mandeb"], a: 0 },
+            { set: "Current Affairs", q: "World’s largest container ship capacity (2024–25)?", options: ["Ever Given", "MSC Irina", "Maersk Mc-Kinney", "HMM Algeciras"], a: 1 },
+            { set: "Regulations", q: "Which document proves fuel Sulfur compliance?", options: ["Logbook", "BDN (Bunker Delivery Note)", "Bill of Lading", "Manifest"], a: 1 },
+            { set: "Regulations", q: "Which convention regulates ship recycling?", options: ["SOLAS", "HKC (Hong Kong Convention)", "MARPOL", "BWM"], a: 1 },
+            { set: "Regulations", q: "Which sea route faced security disruptions in 2024–25?", options: ["Malacca Strait", "Red Sea", "English Channel", "Panama"], a: 1 },
+            { set: "Regulations", q: "Efficiency plan required onboard ships?", options: ["SOPEP", "SEEMP", "ISM", "ISPS"], a: 1 },
+            { set: "Regulations", q: "Code making safety management mandatory?", options: ["ISM Code", "ISPS Code", "IMDG Code", "STCW"], a: 0 },
+            { set: "Regulations", q: "Maximum validity of a Safety Management Certificate?", options: ["2 years", "5 years", "1 year", "10 years"], a: 1 },
+            { set: "Regulations", q: "Term for supplying shore electricity to ships?", options: ["Cold ironing", "Live docking", "Grid linking", "Shore power"], a: 0 },
+            { set: "Regulations", q: "Which code addresses safety for ships in polar waters?", options: ["Ice Code", "Polar Code", "Arctic Protocol", "Cold Code"], a: 1 },
+            { set: "Current Affairs", q: "Busiest container port by throughput?", options: ["Singapore", "Shanghai", "Rotterdam", "Dubai"], a: 1 },
+            { set: "Current Affairs", q: "India’s largest private port?", options: ["Ennore", "Mundra Port", "Pipavav", "Dhamra"], a: 1 },
+            { set: "Regulations", q: "Which MARPOL Annex deals with air pollution?", options: ["Annex I", "Annex VI", "Annex IV", "Annex II"], a: 1 },
+            { set: "Current Affairs", q: "India’s partner in SIMBEX exercise?", options: ["USA", "Singapore", "Russia", "France"], a: 1 },
+            { set: "Regulations", q: "What does VTS stand for?", options: ["Vessel Traffic Service", "Virtual Tracking", "Vessel Time System", "Vector Trip"], a: 0 },
+            { set: "Regulations", q: "Which strait connects Persian Gulf with Gulf of Oman?", options: ["Hormuz", "Malacca", "Gibraltar", "Bab-el-Mandeb"], a: 0 },
             { set: "Current Affairs", q: "World’s largest aircraft carrier currently in service?", options: ["USS Gerald R. Ford", "INS Vikrant", "Shandong", "Queen Elizabeth"], a: 0 }
         ];
 
@@ -152,18 +137,16 @@
 
         function playSound(type) {
             const rand = Math.floor(Math.random() * 3) + 1;
-            const audio = new Audio(`${type}${rand}.mp3`);
-            audio.play().catch(e => console.log("Audio failed. Check file names."));
+            new Audio(`${type}${rand}.mp3`).play().catch(e => console.log("Audio failed"));
         }
 
         function loadQuestion() {
             const data = quizData[currentQ];
             const labels = ['A', 'B', 'C', 'D'];
-            strikes = 0;
-            canClick = true;
+            strikes = 0; canClick = true;
             
-            document.getElementById('strike-1').className = "w-16 h-16 rounded-[1.2rem] border-2 border-slate-800 flex items-center justify-center font-black text-4xl transition-all text-slate-800 bg-slate-900/90";
-            document.getElementById('strike-2').className = "w-16 h-16 rounded-[1.2rem] border-2 border-slate-800 flex items-center justify-center font-black text-4xl transition-all text-slate-800 bg-slate-900/90";
+            document.getElementById('strike-1').className = "w-12 h-12 rounded-xl border-2 border-slate-800 flex items-center justify-center font-black text-2xl text-slate-800 bg-slate-900/90";
+            document.getElementById('strike-2').className = "w-12 h-12 rounded-xl border-2 border-slate-800 flex items-center justify-center font-black text-2xl text-slate-800 bg-slate-900/90";
             
             document.getElementById('set-name').innerText = data.set;
             document.getElementById('question-counter').innerText = `${currentQ + 1}/${quizData.length}`;
@@ -173,8 +156,8 @@
             grid.innerHTML = '';
             data.options.forEach((opt, i) => {
                 const btn = document.createElement('div');
-                btn.className = "option-btn bg-slate-800/40 p-10 rounded-[2.5rem] border-2 border-slate-700/50 text-4xl font-black hover:border-blue-500/50";
-                btn.innerHTML = `<span class="text-blue-500 mr-5">${labels[i]}</span> ${opt}`;
+                btn.className = "option-btn bg-slate-800/40 p-4 rounded-2xl border-2 border-slate-700/50 text-xl font-bold hover:border-blue-500/50";
+                btn.innerHTML = `<span class="text-blue-500 mr-4">${labels[i]}</span> ${opt}`;
                 btn.onclick = () => handleChoice(i, btn);
                 grid.appendChild(btn);
             });
@@ -187,18 +170,12 @@
             if (index === correctIndex) {
                 element.classList.add('correct');
                 playSound('correct');
-                canClick = false;
-                setTimeout(nextQuestion, 1600);
+                canClick = false; setTimeout(nextQuestion, 1400);
             } else {
-                strikes++;
-                element.classList.add('wrong');
-                playSound('wrong');
-                triggerShake();
-                updateStrikes();
+                strikes++; element.classList.add('wrong');
+                playSound('wrong'); triggerShake(); updateStrikes();
                 if (strikes >= 2) {
-                    canClick = false;
-                    highlightCorrect();
-                    setTimeout(nextQuestion, 2200);
+                    canClick = false; highlightCorrect(); setTimeout(nextQuestion, 2000);
                 }
             }
         }
@@ -220,10 +197,9 @@
 
         function nextQuestion() {
             if (currentQ < quizData.length - 1) {
-                currentQ++;
-                loadQuestion();
+                currentQ++; loadQuestion();
             } else {
-                document.getElementById('question-card').innerHTML = `<div class="text-center py-20"><h2 class="text-8xl font-black text-emerald-400 mb-10 tracking-tighter">SUCCESS</h2><p class="text-slate-400 text-3xl font-black">Azimuth 2026 Innovation Challenge Complete.</p><button onclick="location.reload()" class="mt-16 bg-blue-600 px-16 py-8 rounded-full font-black text-3xl shadow-2xl">RESTART</button></div>`;
+                document.getElementById('question-card').innerHTML = `<div class="text-center py-10"><h2 class="text-6xl font-black text-emerald-400 mb-6 tracking-tighter">SUCCESS</h2><p class="text-slate-400 text-xl font-black">Innovation Awaits at Azimuth 2026.</p></div>`;
             }
         }
 
