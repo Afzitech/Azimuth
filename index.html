@@ -3,49 +3,33 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Azimuth 2026 - Innovation Challenge</title>
+    <title>AZIMUTH 2026 - Innovation Challenge</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { 
-            background-color: #020617; 
+        /* FIXED TECH BACKGROUND */
+        #bg-container {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background-color: #020617;
             background-image: 
-                linear-gradient(rgba(30, 58, 138, 0.2) 1px, transparent 1px),
-                linear-gradient(90deg, rgba(30, 58, 138, 0.2) 1px, transparent 1px);
+                linear-gradient(rgba(30, 58, 138, 0.3) 1.5px, transparent 1.5px),
+                linear-gradient(90deg, rgba(30, 58, 138, 0.3) 1.5px, transparent 1.5px);
             background-size: 60px 60px;
-            overflow: hidden; 
-            touch-action: manipulation;
-            position: relative;
-            animation: pulseGrid 10s ease-in-out infinite;
+            z-index: -2;
+            animation: pulseGrid 12s ease-in-out infinite;
         }
 
         @keyframes pulseGrid {
-            0%, 100% { opacity: 0.8; background-size: 60px 60px; }
-            50% { opacity: 1; background-size: 65px 65px; }
-        }
-        
-        body::before {
-            content: "";
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
-            background: radial-gradient(circle at 50% 50%, rgba(15, 23, 42, 0) 0%, rgba(2, 6, 23, 0.9) 100%);
-            pointer-events: none;
-            z-index: 1;
+            0%, 100% { background-size: 60px 60px; }
+            50% { background-size: 65px 65px; }
         }
 
         .cyber-glow {
             position: fixed;
-            width: 600px;
-            height: 600px;
-            background: radial-gradient(circle, rgba(59, 130, 246, 0.15) 0%, transparent 70%);
-            border-radius: 50%;
-            filter: blur(80px);
-            z-index: 0;
-            animation: moveGlow 20s infinite alternate linear;
-        }
-
-        @keyframes moveGlow {
-            0% { top: -10%; left: -10%; }
-            100% { top: 80%; left: 80%; }
+            width: 100vw; height: 100vh;
+            background: radial-gradient(circle at var(--x, 50%) var(--y, 50%), rgba(59, 130, 246, 0.15) 0%, transparent 50%);
+            z-index: -1;
+            pointer-events: none;
         }
 
         .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
@@ -57,44 +41,42 @@
         }
 
         .option-btn { transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); cursor: pointer; -webkit-tap-highlight-color: transparent; }
-        .correct { background-color: #059669 !important; border-color: #10b981 !important; box-shadow: 0 0 30px rgba(16, 185, 129, 0.6); transform: scale(1.05); }
-        .wrong { background-color: #dc2626 !important; border-color: #ef4444 !important; opacity: 0.7; }
-        .strike-active { background-color: #ef4444; border-color: #ef4444; color: white; box-shadow: 0 0 25px rgba(239, 68, 68, 0.7); transform: rotate(5deg) scale(1.1); }
+        .correct { background-color: #059669 !important; border-color: #10b981 !important; box-shadow: 0 0 40px rgba(16, 185, 129, 0.6); transform: scale(1.04); color: white; }
+        .wrong { background-color: #dc2626 !important; border-color: #ef4444 !important; opacity: 0.8; color: white; }
+        .strike-active { background-color: #ef4444 !important; border-color: #ef4444 !important; color: white !important; box-shadow: 0 0 25px rgba(239, 68, 68, 0.7); }
     </style>
 </head>
-<body class="text-white font-sans min-h-screen flex items-center justify-center">
-    <div class="cyber-glow"></div>
+<body class="text-white font-sans min-h-screen flex items-center justify-center m-0 p-0">
+    <div id="bg-container"></div>
+    <div class="cyber-glow" id="glow"></div>
     
-    <div id="main-wrapper" class="relative z-10 w-full max-w-4xl px-4 py-6">
+    <div id="main-wrapper" class="relative z-10 w-full max-w-5xl px-4 py-8">
         <header class="text-center mb-10">
-            <h1 class="text-5xl md:text-7xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 via-cyan-300 to-emerald-400">AZIMUTH 2026</h1>
+            <h1 class="text-6xl md:text-8xl font-black text-transparent bg-clip-text bg-gradient-to-br from-blue-400 via-cyan-300 to-emerald-400 tracking-tighter drop-shadow-2xl">AZIMUTH 2026</h1>
             
-            <div class="flex justify-center gap-8 mt-10">
-                <div id="strike-1" class="w-14 h-14 rounded-2xl border-2 border-slate-800 flex items-center justify-center font-black text-3xl transition-all text-slate-800 bg-slate-900/90 shadow-inner">X</div>
-                <div id="strike-2" class="w-14 h-14 rounded-2xl border-2 border-slate-800 flex items-center justify-center font-black text-3xl transition-all text-slate-800 bg-slate-900/90 shadow-inner">X</div>
+            <div class="flex justify-center gap-10 mt-10">
+                <div id="strike-1" class="w-16 h-16 rounded-[1.2rem] border-2 border-slate-800 flex items-center justify-center font-black text-4xl transition-all text-slate-800 bg-slate-900/90">X</div>
+                <div id="strike-2" class="w-16 h-16 rounded-[1.2rem] border-2 border-slate-800 flex items-center justify-center font-black text-4xl transition-all text-slate-800 bg-slate-900/90">X</div>
             </div>
         </header>
 
-        <div id="question-card" class="bg-slate-900/95 backdrop-blur-2xl p-8 md:p-14 rounded-[3rem] shadow-[0_0_50px_rgba(0,0,0,0.5)] border border-blue-500/20 relative">
-            <div class="flex justify-between items-center mb-10">
-                <span id="set-name" class="bg-blue-600/20 text-blue-400 border border-blue-500/40 px-6 py-2 rounded-full text-xs font-black uppercase tracking-[0.2em]"></span>
-                <span id="question-counter" class="text-slate-500 font-mono font-bold text-lg"></span>
+        <div id="question-card" class="bg-slate-900/90 backdrop-blur-3xl p-10 md:p-16 rounded-[3.5rem] shadow-[0_0_100px_rgba(0,0,0,0.8)] border border-blue-500/20">
+            <div class="flex justify-between items-center mb-12">
+                <span id="set-name" class="bg-blue-600/20 text-blue-400 border border-blue-500/40 px-8 py-2.5 rounded-full text-xs font-black uppercase tracking-[0.3em]"></span>
+                <span id="question-counter" class="text-slate-600 font-mono font-black text-xl"></span>
             </div>
             
-            <h2 id="question-text" class="text-2xl md:text-5xl font-bold mb-14 leading-tight text-slate-100"></h2>
-            
-            <div id="options-grid" class="grid grid-cols-1 md:grid-cols-2 gap-6"></div>
+            <h2 id="question-text" class="text-3xl md:text-5xl font-bold mb-16 leading-tight"></h2>
+            <div id="options-grid" class="grid grid-cols-1 md:grid-cols-2 gap-8"></div>
         </div>
     </div>
 
-    <button onclick="nextQuestion()" class="fixed bottom-8 right-8 z-50 bg-white/5 hover:bg-white/10 p-4 rounded-3xl border border-white/10 text-white/20 hover:text-white transition-all text-[10px] font-black uppercase tracking-widest">
-        SKIP →
-    </button>
+    <button onclick="nextQuestion()" class="fixed bottom-10 right-10 z-50 bg-white/5 hover:bg-white/10 px-6 py-4 rounded-2xl border border-white/10 text-white/30 hover:text-white transition-all text-xs font-black uppercase">SKIP →</button>
 
     <script>
         const quizData = [
             // 1-10: DIGITAL HORIZON
-            { set: "Digital Horizon", q: "What is the official IMO acronym for autonomous ships ?", options: ["MARS", "MASS", "AUTO-SHIP", "SSS"], a: 1 },
+            { set: "Digital Horizon", q: "What is the official IMO acronym for autonomous ships?", options: ["MARS", "MASS", "AUTO-SHIP", "SSS"], a: 1 },
             { set: "Digital Horizon", q: "Which level of autonomy defines a ship that is 'fully autonomous'?", options: ["Degree 1", "Degree 2", "Degree 3", "Degree 4"], a: 3 },
             { set: "Digital Horizon", q: "A 'Digital Twin' primarily relies on what to function?", options: ["Real-time sensor data", "Blueprints", "Historical logs only", "Satellite photos"], a: 0 },
             { set: "Digital Horizon", q: "Which technology provides a 'tamper-proof' ledger for maritime documents?", options: ["Cloud Computing", "Blockchain", "Adobe Acrobat", "Excel"], a: 1 },
@@ -141,7 +123,7 @@
             { set: "Technical Deep Dive", q: "What is 'Hull Fouling' caused by?", options: ["Rust", "Marine organisms like barnacles", "Salt", "Low-quality paint"], a: 1 },
             { set: "Technical Deep Dive", q: "What does GMDSS stand for?", options: ["Global Distress and Safety System", "Gear Management", "General Marine", "Global Mapping"], a: 0 },
 
-            // 41-60: CURRENT AFFAIRS & REGS (From doc)
+            // 41-60: CURRENT AFFAIRS & REGS
             { set: "Current Affairs", q: "Who is India’s current Union Minister for Ports, Shipping & Waterways?", options: ["Nitin Gadkari", "S. Jaishankar", "Sarbananda Sonowal", "Rajnath Singh"], a: 2 },
             { set: "Current Affairs", q: "Which port is India’s largest container port by throughput?", options: ["Mundra", "JNPA", "Chennai", "Kochi"], a: 1 },
             { set: "Current Affairs", q: "Which shipyard built India’s first aircraft carrier INS Vikrant?", options: ["Mazagon Dock", "Garden Reach", "Cochin Shipyard Limited", "Goa Shipyard"], a: 2 },
@@ -171,7 +153,7 @@
         function playSound(type) {
             const rand = Math.floor(Math.random() * 3) + 1;
             const audio = new Audio(`${type}${rand}.mp3`);
-            audio.play().catch(e => console.log("Audio play failed. Ensure files are in same folder."));
+            audio.play().catch(e => console.log("Audio failed. Check file names."));
         }
 
         function loadQuestion() {
@@ -180,8 +162,8 @@
             strikes = 0;
             canClick = true;
             
-            document.getElementById('strike-1').className = "w-14 h-14 rounded-2xl border-2 border-slate-800 flex items-center justify-center font-black text-3xl transition-all text-slate-800 bg-slate-900/90";
-            document.getElementById('strike-2').className = "w-14 h-14 rounded-2xl border-2 border-slate-800 flex items-center justify-center font-black text-3xl transition-all text-slate-800 bg-slate-900/90";
+            document.getElementById('strike-1').className = "w-16 h-16 rounded-[1.2rem] border-2 border-slate-800 flex items-center justify-center font-black text-4xl transition-all text-slate-800 bg-slate-900/90";
+            document.getElementById('strike-2').className = "w-16 h-16 rounded-[1.2rem] border-2 border-slate-800 flex items-center justify-center font-black text-4xl transition-all text-slate-800 bg-slate-900/90";
             
             document.getElementById('set-name').innerText = data.set;
             document.getElementById('question-counter').innerText = `${currentQ + 1}/${quizData.length}`;
@@ -191,8 +173,8 @@
             grid.innerHTML = '';
             data.options.forEach((opt, i) => {
                 const btn = document.createElement('div');
-                btn.className = "option-btn bg-slate-800/40 p-7 rounded-[1.5rem] border-2 border-slate-700/50 text-2xl font-bold hover:border-blue-500/50 hover:bg-slate-800";
-                btn.innerHTML = `<span class="text-blue-500 mr-4">${labels[i]})</span> ${opt}`;
+                btn.className = "option-btn bg-slate-800/40 p-10 rounded-[2.5rem] border-2 border-slate-700/50 text-4xl font-black hover:border-blue-500/50";
+                btn.innerHTML = `<span class="text-blue-500 mr-5">${labels[i]}</span> ${opt}`;
                 btn.onclick = () => handleChoice(i, btn);
                 grid.appendChild(btn);
             });
@@ -232,9 +214,8 @@
         }
 
         function triggerShake() {
-            const card = document.getElementById('question-card');
-            card.classList.add('shake');
-            setTimeout(() => card.classList.remove('shake'), 400);
+            document.getElementById('question-card').classList.add('shake');
+            setTimeout(() => document.getElementById('question-card').classList.remove('shake'), 400);
         }
 
         function nextQuestion() {
@@ -242,9 +223,16 @@
                 currentQ++;
                 loadQuestion();
             } else {
-                document.getElementById('question-card').innerHTML = `<div class="text-center py-20"><h2 class="text-6xl font-black text-emerald-400 mb-8 uppercase">Complete</h2><p class="text-slate-400 text-xl font-bold">Azimuth 2026 Innovation Challenge.</p><button onclick="location.reload()" class="mt-12 bg-blue-600 px-12 py-5 rounded-full font-black text-xl shadow-2xl">RESTART</button></div>`;
+                document.getElementById('question-card').innerHTML = `<div class="text-center py-20"><h2 class="text-8xl font-black text-emerald-400 mb-10 tracking-tighter">SUCCESS</h2><p class="text-slate-400 text-3xl font-black">Azimuth 2026 Innovation Challenge Complete.</p><button onclick="location.reload()" class="mt-16 bg-blue-600 px-16 py-8 rounded-full font-black text-3xl shadow-2xl">RESTART</button></div>`;
             }
         }
+
+        window.addEventListener('mousemove', e => {
+            const x = (e.clientX / window.innerWidth) * 100;
+            const y = (e.clientY / window.innerHeight) * 100;
+            document.getElementById('glow').style.setProperty('--x', `${x}%`);
+            document.getElementById('glow').style.setProperty('--y', `${y}%`);
+        });
 
         loadQuestion();
     </script>
