@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Azimuth 2026 - Maritime Quiz</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        .reveal-answer { display: none; }
+        .reveal-answer.show { display: block; }
+    </style>
+</head>
+<body class="bg-slate-900 text-white font-sans">
+    <div class="max-w-3xl mx-auto px-4 py-10">
+        <header class="text-center mb-10 border-b border-slate-700 pb-6">
+            <h1 class="text-4xl font-bold text-blue-400">AZIMUTH 2026</h1>
+            <p class="text-slate-400 mt-2 uppercase tracking-widest">Maritime Innovation Quiz</p>
+        </header>
+
+        <div id="quiz-container">
+            <div id="question-card" class="bg-slate-800 p-8 rounded-2xl shadow-xl border border-slate-700">
+                <div class="flex justify-between items-center mb-6">
+                    <span id="set-name" class="bg-blue-600 px-3 py-1 rounded text-xs font-bold uppercase"></span>
+                    <span id="question-number" class="text-slate-500 font-mono"></span>
+                </div>
+                
+                <h2 id="question-text" class="text-2xl font-semibold mb-8 leading-snug"></h2>
+                
+                <div id="options-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
+                    </div>
+
+                <div class="flex gap-4">
+                    <button onclick="toggleAnswer()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 py-3 rounded-lg font-bold transition">REVEAL ANSWER</button>
+                    <button onclick="nextQuestion()" class="flex-1 bg-blue-600 hover:bg-blue-500 py-3 rounded-lg font-bold transition">NEXT QUESTION →</button>
+                </div>
+
+                <div id="answer-box" class="reveal-answer mt-6 p-4 bg-emerald-900/30 border border-emerald-500 text-emerald-400 rounded-lg text-center font-bold text-xl">
+                    CORRECT: <span id="correct-text"></span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const quizData = [
+            // SET 1: DIGITAL HORIZON
+            { set: "Digital Horizon", q: "What is the official IMO acronym for autonomous ships?", options: ["MARS", "MASS", "AUTO-SHIP", "SSS"], a: "B) MASS" },
+            { set: "Digital Horizon", q: "Which level of autonomy defines a ship that is 'fully autonomous' with no crew on board?", options: ["Degree 1", "Degree 2", "Degree 3", "Degree 4"], a: "D) Degree 4" },
+            // SET 3: INDIAN MARITIME (From your doc)
+            { set: "Indian Maritime", q: "Who is India’s current Union Minister for Ports, Shipping & Waterways?", options: ["Nitin Gadkari", "Sarbananda Sonowal", "Rajnath Singh", "S. Jaishankar"], a: "B) Sarbananda Sonowal" },
+            { set: "Indian Maritime", q: "Which port is India’s largest container port by throughput?", options: ["Mundra", "JNPA", "Chennai", "Vizag"], a: "B) JNPA" },
+            { set: "Indian Maritime", q: "When is National Maritime Day celebrated in India?", options: ["Jan 26", "April 5th", "Aug 15", "Dec 4"], a: "B) April 5th" }
+            // Add more questions here following this format...
+        ];
+
+        let currentQ = 0;
+
+        function loadQuestion() {
+            const data = quizData[currentQ];
+            document.getElementById('set-name').innerText = data.set;
+            document.getElementById('question-number').innerText = `Q ${currentQ + 1} / ${quizData.length}`;
+            document.getElementById('question-text').innerText = data.q;
+            document.getElementById('correct-text').innerText = data.a;
+            document.getElementById('answer-box').classList.remove('show');
+
+            const grid = document.getElementById('options-grid');
+            grid.innerHTML = '';
+            const labels = ['A', 'B', 'C', 'D'];
+            data.options.forEach((opt, i) => {
+                grid.innerHTML += `<div class="bg-slate-700/50 p-4 rounded-lg border border-slate-600">${labels[i]}) ${opt}</div>`;
+            });
+        }
+
+        function toggleAnswer() {
+            document.getElementById('answer-box').classList.toggle('show');
+        }
+
+        function nextQuestion() {
+            if (currentQ < quizData.length - 1) {
+                currentQ++;
+                loadQuestion();
+            } else {
+                alert("Quiz Completed!");
+            }
+        }
+
+        loadQuestion();
+    </script>
+</body>
+</html>
