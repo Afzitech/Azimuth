@@ -3,10 +3,10 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Azimuth 2026 - Interactive Quiz</title>
+    <title>Azimuth 2026 - Innovation Challenge</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        body { background-color: #0f172a; overflow-x: hidden; }
+        body { background-color: #0f172a; overflow-x: hidden; touch-action: manipulation; }
         .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
         @keyframes shake {
             10%, 90% { transform: translate3d(-1px, 0, 0); }
@@ -14,51 +14,120 @@
             30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
             40%, 60% { transform: translate3d(4px, 0, 0); }
         }
-        .option-btn { transition: all 0.2s ease; cursor: pointer; }
-        .correct { background-color: #059669 !important; border-color: #10b981 !important; color: white; }
-        .wrong { background-color: #dc2626 !important; border-color: #ef4444 !important; color: white; }
+        .option-btn { transition: all 0.2s ease; cursor: pointer; -webkit-tap-highlight-color: transparent; }
+        .correct { background-color: #059669 !important; border-color: #10b981 !important; color: white; transform: scale(1.02); }
+        .wrong { background-color: #dc2626 !important; border-color: #ef4444 !important; color: white; opacity: 0.7; }
+        .strike-active { background-color: #ef4444; border-color: #ef4444; color: white; box-shadow: 0 0 15px rgba(239, 68, 68, 0.5); }
     </style>
 </head>
 <body class="text-white font-sans">
-    <div id="main-wrapper" class="max-w-4xl mx-auto px-4 py-8 md:py-12">
+    <div id="main-wrapper" class="max-w-4xl mx-auto px-4 py-6 md:py-10">
         <header class="text-center mb-8">
             <h1 class="text-3xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">AZIMUTH 2026</h1>
-            <div class="flex justify-center gap-4 mt-4">
-                <div id="strike-1" class="w-8 h-8 rounded-full border-2 border-slate-600 flex items-center justify-center font-bold">1</div>
-                <div id="strike-2" class="w-8 h-8 rounded-full border-2 border-slate-600 flex items-center justify-center font-bold">2</div>
+            <p class="text-slate-500 text-xs uppercase tracking-[0.3em] mt-2 mb-4">Innovation & Digital Transformation</p>
+            <div class="flex justify-center gap-6 mt-4">
+                <div class="text-center">
+                    <p class="text-[10px] uppercase text-slate-500 mb-1 font-bold">Strike 1</p>
+                    <div id="strike-1" class="w-10 h-10 rounded-full border-2 border-slate-700 flex items-center justify-center font-black text-xl transition-all text-slate-700">X</div>
+                </div>
+                <div class="text-center">
+                    <p class="text-[10px] uppercase text-slate-500 mb-1 font-bold">Strike 2</p>
+                    <div id="strike-2" class="w-10 h-10 rounded-full border-2 border-slate-700 flex items-center justify-center font-black text-xl transition-all text-slate-700">X</div>
+                </div>
             </div>
         </header>
 
-        <div id="question-card" class="bg-slate-800 p-6 md:p-10 rounded-3xl shadow-2xl border border-slate-700">
+        <div id="question-card" class="bg-slate-800 p-6 md:p-10 rounded-3xl shadow-2xl border border-slate-700 relative overflow-hidden">
             <div class="flex justify-between items-center mb-6">
-                <span id="set-name" class="bg-blue-600 px-4 py-1.5 rounded-full text-xs font-black uppercase"></span>
-                <span id="question-counter" class="text-slate-500 font-mono font-bold"></span>
+                <span id="set-name" class="bg-blue-600 px-4 py-1.5 rounded-full text-[10px] font-black uppercase tracking-wider text-white"></span>
+                <span id="question-counter" class="text-slate-500 font-mono font-bold text-sm"></span>
             </div>
             
-            <h2 id="question-text" class="text-xl md:text-3xl font-bold mb-10 leading-tight"></h2>
+            <h2 id="question-text" class="text-xl md:text-3xl font-bold mb-10 leading-tight text-slate-100"></h2>
             
             <div id="options-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
         </div>
 
-        <div class="mt-8 bg-slate-800 h-3 rounded-full overflow-hidden border border-slate-700">
-            <div id="progress-bar" class="bg-gradient-to-r from-blue-500 to-emerald-500 h-full transition-all duration-500" style="width: 0%"></div>
+        <div class="mt-8 flex items-center gap-4">
+            <div class="flex-1 bg-slate-800 h-2 rounded-full overflow-hidden border border-slate-700">
+                <div id="progress-bar" class="bg-gradient-to-r from-blue-500 to-emerald-500 h-full transition-all duration-500" style="width: 0%"></div>
+            </div>
+            <span id="percentage-text" class="text-xs font-mono text-slate-500 w-10 text-right">0%</span>
         </div>
     </div>
 
     <script>
         const quizData = [
+            // MAIN QUESTIONS: DIGITAL TRANSFORMATION
             { set: "Digital Horizon", q: "What is the official IMO acronym for autonomous ships?", options: ["MARS", "MASS", "AUTO-SHIP", "SSS"], a: 1 },
             { set: "Digital Horizon", q: "Which level of autonomy defines a ship that is 'fully autonomous'?", options: ["Degree 1", "Degree 2", "Degree 3", "Degree 4"], a: 3 },
-            { set: "Indian Maritime", q: "Who is India’s current Union Minister for Ports, Shipping & Waterways?", options: ["Nitin Gadkari", "Sarbananda Sonowal", "Rajnath Singh", "S. Jaishankar"], a: 1 },
-            { set: "Indian Maritime", q: "Which port is India’s largest container port by throughput?", options: ["Mundra", "JNPA", "Chennai", "Vizag"], a: 1 },
-            { set: "Indian Maritime", q: "When is National Maritime Day celebrated in India?", options: ["Jan 26", "April 5th", "Aug 15", "Dec 4"], a: 1 },
-            { set: "Global Trivia", q: "Which canal connects the Mediterranean to the Red Sea?", options: ["Panama", "Suez Canal", "Kiel", "Corinth"], a: 1 },
-            { set: "Technical Deep Dive", q: "Which document must be produced to prove fuel Sulfur compliance?", options: ["Logbook", "BDN", "Bill of Lading", "Manifest"], a: 1 },
-            { set: "Regulations", q: "Which MARPOL Annex deals with prevention of air pollution?", options: ["Annex I", "Annex VI", "Annex IV", "Annex II"], a: 1 }
-            // Add all remaining 53 questions here using the 0-indexed 'a' (0=A, 1=B, 2=C, 3=D)
-        ];
+            { set: "Digital Horizon", q: "A 'Digital Twin' primarily relies on what to function?", options: ["Real-time sensor data", "Blueprints", "Historical logs only", "Satellite photos"], a: 0 },
+            { set: "Digital Horizon", q: "Which technology provides a 'tamper-proof' ledger for maritime documents?", options: ["Cloud Computing", "Blockchain", "Adobe Acrobat", "Excel"], a: 1 },
+            { set: "Digital Horizon", q: "What is the primary goal of 'Predictive Maintenance'?", options: ["Fix after break", "Predict failure before it happens", "Calendar scheduling", "Manual inspection"], a: 1 },
+            { set: "Digital Horizon", q: "What does AIS stand for?", options: ["Automated Inland System", "Automatic Identification System", "Atlantic Intelligence", "Aerial Sensor"], a: 1 },
+            { set: "Digital Horizon", q: "Which sensor uses light pulses to help autonomous ships 'see' in 3D?", options: ["SONAR", "RADAR", "LiDAR", "GPS"], a: 2 },
+            { set: "Digital Horizon", q: "In bridge navigation, what does AR stand for?", options: ["Advanced Radio", "Augmented Reality", "Automated Route", "Anchor Release"], a: 1 },
+            { set: "Digital Horizon", q: "AI route optimization can save approximately how much fuel?", options: ["1%", "5% to 15%", "50%", "80%"], a: 1 },
+            { set: "Digital Horizon", q: "The ability to recover quickly after a digital attack is called:", options: ["Firewalling", "Cyber Resilience", "Hardwiring", "Encryption"], a: 1 },
 
-        // I have pre-filled a few samples. You can add the rest of the 60 questions using the index (0 for A, 1 for B, etc.)
+            // MAIN QUESTIONS: GREEN PROPULSION (WAPS)
+            { set: "Green Wave", q: "What does WAPS stand for in green shipping?", options: ["Water-Action Power", "Wind-Assisted Propulsion Systems", "Weather-Adjusted", "Wave-Active"], a: 1 },
+            { set: "Green Wave", q: "Which WAPS technology uses large, spinning vertical cylinders?", options: ["Wing Sails", "Kite Sails", "Flettner Rotors", "Suction Sails"], a: 2 },
+            { set: "Green Wave", q: "The Magnus Effect is the core principle of which system?", options: ["Bernoulli", "Flettner Rotors", "Pascal's Law", "Doppler Effect"], a: 1 },
+            { set: "Green Wave", q: "Why are Kite Sails flown at altitudes up to 300m?", options: ["Safety", "Catch stronger/consistent winds", "GPS signals", "Marketing"], a: 1 },
+            { set: "Green Wave", q: "Which alternative fuel has zero carbon at point of use?", options: ["HFO", "LNG", "Ammonia", "Diesel"], a: 2 },
+            { set: "Green Wave", q: "The IMO targets 'Net-Zero' emissions by which year?", options: ["2030", "2040", "2050", "2060"], a: 2 },
+            { set: "Green Wave", q: "A 'Suction Sail' uses internal fans to create:", options: ["Cooling", "Pressure difference/Lift", "Exhaust", "Electricity"], a: 1 },
+            { set: "Green Wave", q: "What does EEXI stand for?", options: ["Engine Data", "Energy Efficiency Existing Ship Index", "Electronic Engine", "Essential Emission"], a: 1 },
+            { set: "Green Wave", q: "What do we call rigid sails that look like airplane wings?", options: ["Soft Sails", "Wing Sails", "Parachute", "Turbo"], a: 1 },
+            { set: "Green Wave", q: "Which rating system grades ships A to E based on efficiency?", options: ["EEDI", "EEXI", "CII", "DCS"], a: 2 },
+
+            // MAIN QUESTIONS: SMART PORTS & LOGISTICS
+            { set: "Smart Logistics", q: "What are the driverless trucks in automated ports called?", options: ["UAVs", "AGVs", "ROVs", "Gantry Trucks"], a: 1 },
+            { set: "Smart Logistics", q: "What is the 'Internet of Things' (IoT) used for in a port?", options: ["Free WiFi", "Tracking containers & equipment", "Social Media", "Reducing weight"], a: 1 },
+            { set: "Smart Logistics", q: "Which network technology is vital for controlling remote cranes?", options: ["2G", "5G", "Dial-up", "Bluetooth"], a: 1 },
+            { set: "Smart Logistics", q: "What is the acronym for the massive cranes that unload ships?", options: ["STS (Ship-to-Shore)", "RTG", "MHC", "LOLO"], a: 0 },
+            { set: "Smart Logistics", q: "In port construction, what does BIM stand for?", options: ["Basic Image Model", "Building Information Modeling", "Bridge Management", "Bulk Movement"], a: 1 },
+            { set: "Smart Logistics", q: "A 'Reefer' container is used for:", options: ["Steel beams", "Temperature-controlled goods", "Toxic waste", "Cars"], a: 1 },
+            { set: "Smart Logistics", q: "'Just-In-Time' (JIT) arrivals help ships save fuel by:", options: ["Speeding up", "Reducing idling at anchor", "Less water", "More cargo"], a: 1 },
+            { set: "Smart Logistics", q: "The 'Hinterland' refers to which part of the port operation?", options: ["Sea area", "Land area connected to port", "Captain's cabin", "Engine room"], a: 1 },
+            { set: "Smart Logistics", q: "What is a 'Single Window' system in port logistics?", options: ["Crane window", "Digital portal for all trade docs", "Viewing deck", "Customs bypass"], a: 1 },
+            { set: "Smart Logistics", q: "Which country has the most fully automated container terminals currently?", options: ["USA", "India", "China", "UK"], a: 2 },
+
+            // MAIN QUESTIONS: TECHNICAL DEEP DIVE
+            { set: "Technical Deep Dive", q: "In a marine engine, what does SCR stand for?", options: ["Super Charge", "Selective Catalytic Reduction", "Sea Cooling", "System Remote"], a: 1 },
+            { set: "Technical Deep Dive", q: "The Plimsoll Line on a ship's hull indicates:", options: ["Name", "Max safe loading depth", "Speed limit", "Fuel level"], a: 1 },
+            { set: "Technical Deep Dive", q: "In cyber security, what does OT stand for?", options: ["Office Tech", "Operational Technology", "Outer Telemetry", "Online Trans"], a: 1 },
+            { set: "Technical Deep Dive", q: "What is 'Cavitation' usually found on?", options: ["Anchor", "Deck", "Propeller blades", "Lifeboats"], a: 2 },
+            { set: "Technical Deep Dive", q: "IMO 2020 limited the Global Sulfur in fuel to what percentage?", options: ["3.5%", "1.0%", "0.50%", "0.1%"], a: 2 },
+            { set: "Technical Deep Dive", q: "A 'Shaft Generator' produces electricity from which part?", options: ["Wind", "Solar", "Main propulsion shaft", "Auxiliary engine"], a: 2 },
+            { set: "Technical Deep Dive", q: "What does COLREGs stand for?", options: ["Intl Regulations for Preventing Collisions", "Coastal Log", "Collaborative Rules", "Collection of Rules"], a: 0 },
+            { set: "Technical Deep Dive", q: "Which WAPS system uses a 'Kite' at high altitudes?", options: ["Norsepower", "AirSeas", "Oceanbird", "Bound4Blue"], a: 1 },
+            { set: "Technical Deep Dive", q: "What is 'Hull Fouling' caused by?", options: ["Rust", "Marine organisms like barnacles", "Salt", "Low-quality paint"], a: 1 },
+            { set: "Technical Deep Dive", q: "What does GMDSS stand for?", options: ["Global Maritime Distress and Safety System", "Gear Management", "General Marine", "Global Mapping"], a: 0 },
+
+            // BACKUP QUESTIONS: INDIAN MARITIME & REGS (From your doc)
+            { set: "Current Affairs", q: "Who is India’s current Union Minister for Ports, Shipping & Waterways?", options: ["Nitin Gadkari", "S. Jaishankar", "Sarbananda Sonowal", "Rajnath Singh"], a: 2 },
+            { set: "Current Affairs", q: "Which port is India’s largest container port by throughput?", options: ["Mundra", "JNPA", "Chennai", "Kochi"], a: 1 },
+            { set: "Current Affairs", q: "Which shipyard built India’s first aircraft carrier INS Vikrant?", options: ["Mazagon Dock", "Garden Reach", "Cochin Shipyard Limited", "Goa Shipyard"], a: 2 },
+            { set: "Current Affairs", q: "When is National Maritime Day celebrated in India?", options: ["January 26", "April 5th", "August 15", "December 4"], a: 1 },
+            { set: "Current Affairs", q: "World’s largest container ship by TEU capacity (2024–25)?", options: ["Ever Given", "MSC Irina", "Maersk Mc-Kinney", "HMM Algeciras"], a: 1 },
+            { set: "Regulations", q: "Which document must be produced to prove fuel Sulfur compliance?", options: ["Logbook", "BDN (Bunker Delivery Note)", "Bill of Lading", "Manifest"], a: 1 },
+            { set: "Regulations", q: "Which convention regulates ship recycling and safe dismantling?", options: ["SOLAS", "HKC (Hong Kong Convention)", "MARPOL", "BWM"], a: 1 },
+            { set: "Regulations", q: "Which sea route faced major security disruptions in 2024–25?", options: ["Malacca Strait", "Red Sea", "English Channel", "Panama"], a: 1 },
+            { set: "Regulations", q: "Energy efficiency plan required to be carried onboard ships?", options: ["SOPEP", "SEEMP", "ISM", "ISPS"], a: 1 },
+            { set: "Regulations", q: "Which code made safety management systems mandatory?", options: ["ISM Code", "ISPS Code", "IMDG Code", "STCW"], a: 0 },
+            { set: "Regulations", q: "What is the maximum validity of a Safety Management Certificate?", options: ["2 years", "5 years", "1 year", "10 years"], a: 1 },
+            { set: "Regulations", q: "What term is used for supplying shore-based electricity to ships?", options: ["Cold ironing", "Live docking", "Grid linking", "Shore power"], a: 0 },
+            { set: "Regulations", q: "Which IMO code addresses safety for ships in polar waters?", options: ["Ice Code", "Polar Code", "Arctic Protocol", "Cold Code"], a: 1 },
+            { set: "Current Affairs", q: "Which port is the world’s busiest container port by throughput?", options: ["Singapore", "Shanghai", "Rotterdam", "Dubai"], a: 1 },
+            { set: "Current Affairs", q: "Which Indian port is India’s largest private (non-major) port?", options: ["Ennore", "Mundra Port", "Pipavav", "Dhamra"], a: 1 },
+            { set: "Regulations", q: "Which MARPOL Annex deals with prevention of air pollution?", options: ["Annex I", "Annex VI", "Annex IV", "Annex II"], a: 1 },
+            { set: "Current Affairs", q: "Which country is India’s partner in the SIMBEX maritime exercise?", options: ["USA", "Singapore", "Russia", "France"], a: 1 },
+            { set: "Regulations", q: "What does VTS stand for in maritime operations?", options: ["Vessel Traffic Service", "Virtual Tracking", "Vessel Time System", "Vector Trip"], a: 0 },
+            { set: "Regulations", q: "Which strait connects the Persian Gulf with the Gulf of Oman?", options: ["Hormuz", "Malacca", "Gibraltar", "Bab-el-Mandeb"], a: 0 },
+            { set: "Current Affairs", q: "World’s largest aircraft carrier currently in service?", options: ["USS Gerald R. Ford", "INS Vikrant", "Shandong", "Queen Elizabeth"], a: 0 }
+        ];
 
         let currentQ = 0;
         let strikes = 0;
@@ -70,14 +139,16 @@
             strikes = 0;
             canClick = true;
             
-            document.getElementById('strike-1').className = "w-8 h-8 rounded-full border-2 border-slate-600 flex items-center justify-center font-bold";
-            document.getElementById('strike-2').className = "w-8 h-8 rounded-full border-2 border-slate-600 flex items-center justify-center font-bold";
+            document.getElementById('strike-1').className = "w-10 h-10 rounded-full border-2 border-slate-700 flex items-center justify-center font-black text-xl transition-all text-slate-700";
+            document.getElementById('strike-2').className = "w-10 h-10 rounded-full border-2 border-slate-700 flex items-center justify-center font-black text-xl transition-all text-slate-700";
+            
             document.getElementById('set-name').innerText = data.set;
             document.getElementById('question-counter').innerText = `${currentQ + 1} / ${quizData.length}`;
             document.getElementById('question-text').innerText = data.q;
             
             const progress = ((currentQ + 1) / quizData.length) * 100;
             document.getElementById('progress-bar').style.width = progress + '%';
+            document.getElementById('percentage-text').innerText = Math.round(progress) + '%';
 
             const grid = document.getElementById('options-grid');
             grid.innerHTML = '';
@@ -119,8 +190,16 @@
         }
 
         function updateStrikes() {
-            if (strikes >= 1) document.getElementById('strike-1').classList.add('bg-red-600', 'border-red-600');
-            if (strikes >= 2) document.getElementById('strike-2').classList.add('bg-red-600', 'border-red-600');
+            if (strikes >= 1) {
+                const s1 = document.getElementById('strike-1');
+                s1.classList.add('strike-active');
+                s1.classList.remove('text-slate-700');
+            }
+            if (strikes >= 2) {
+                const s2 = document.getElementById('strike-2');
+                s2.classList.add('strike-active');
+                s2.classList.remove('text-slate-700');
+            }
         }
 
         function triggerShake() {
@@ -134,7 +213,13 @@
                 currentQ++;
                 loadQuestion();
             } else {
-                alert("Quiz Over! You are a Maritime Legend.");
+                document.getElementById('question-card').innerHTML = `
+                    <div class="text-center py-10">
+                        <h2 class="text-4xl font-black text-emerald-400 mb-4">QUIZ COMPLETED!</h2>
+                        <p class="text-slate-400">Thank you for participating in Azimuth 2026.</p>
+                        <button onclick="location.reload()" class="mt-8 bg-blue-600 px-6 py-2 rounded-full font-bold">RESTART</button>
+                    </div>
+                `;
             }
         }
 
