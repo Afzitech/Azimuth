@@ -3,76 +3,130 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Azimuth 2026 - Maritime Quiz</title>
+    <title>Azimuth 2026 - Interactive Quiz</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
-        .reveal-answer { display: none; }
-        .reveal-answer.show { display: block; }
+        body { background-color: #0f172a; overflow-x: hidden; }
+        .shake { animation: shake 0.4s cubic-bezier(.36,.07,.19,.97) both; }
+        @keyframes shake {
+            10%, 90% { transform: translate3d(-1px, 0, 0); }
+            20%, 80% { transform: translate3d(2px, 0, 0); }
+            30%, 50%, 70% { transform: translate3d(-4px, 0, 0); }
+            40%, 60% { transform: translate3d(4px, 0, 0); }
+        }
+        .option-btn { transition: all 0.2s ease; cursor: pointer; }
+        .correct { background-color: #059669 !important; border-color: #10b981 !important; color: white; }
+        .wrong { background-color: #dc2626 !important; border-color: #ef4444 !important; color: white; }
     </style>
 </head>
-<body class="bg-slate-900 text-white font-sans">
-    <div class="max-w-3xl mx-auto px-4 py-10">
-        <header class="text-center mb-10 border-b border-slate-700 pb-6">
-            <h1 class="text-4xl font-bold text-blue-400">AZIMUTH 2026</h1>
-            <p class="text-slate-400 mt-2 uppercase tracking-widest">Maritime Innovation Quiz</p>
+<body class="text-white font-sans">
+    <div id="main-wrapper" class="max-w-4xl mx-auto px-4 py-8 md:py-12">
+        <header class="text-center mb-8">
+            <h1 class="text-3xl md:text-5xl font-black text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-emerald-400">AZIMUTH 2026</h1>
+            <div class="flex justify-center gap-4 mt-4">
+                <div id="strike-1" class="w-8 h-8 rounded-full border-2 border-slate-600 flex items-center justify-center font-bold">1</div>
+                <div id="strike-2" class="w-8 h-8 rounded-full border-2 border-slate-600 flex items-center justify-center font-bold">2</div>
+            </div>
         </header>
 
-        <div id="quiz-container">
-            <div id="question-card" class="bg-slate-800 p-8 rounded-2xl shadow-xl border border-slate-700">
-                <div class="flex justify-between items-center mb-6">
-                    <span id="set-name" class="bg-blue-600 px-3 py-1 rounded text-xs font-bold uppercase"></span>
-                    <span id="question-number" class="text-slate-500 font-mono"></span>
-                </div>
-                
-                <h2 id="question-text" class="text-2xl font-semibold mb-8 leading-snug"></h2>
-                
-                <div id="options-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-8">
-                    </div>
-
-                <div class="flex gap-4">
-                    <button onclick="toggleAnswer()" class="flex-1 bg-emerald-600 hover:bg-emerald-500 py-3 rounded-lg font-bold transition">REVEAL ANSWER</button>
-                    <button onclick="nextQuestion()" class="flex-1 bg-blue-600 hover:bg-blue-500 py-3 rounded-lg font-bold transition">NEXT QUESTION →</button>
-                </div>
-
-                <div id="answer-box" class="reveal-answer mt-6 p-4 bg-emerald-900/30 border border-emerald-500 text-emerald-400 rounded-lg text-center font-bold text-xl">
-                    CORRECT: <span id="correct-text"></span>
-                </div>
+        <div id="question-card" class="bg-slate-800 p-6 md:p-10 rounded-3xl shadow-2xl border border-slate-700">
+            <div class="flex justify-between items-center mb-6">
+                <span id="set-name" class="bg-blue-600 px-4 py-1.5 rounded-full text-xs font-black uppercase"></span>
+                <span id="question-counter" class="text-slate-500 font-mono font-bold"></span>
             </div>
+            
+            <h2 id="question-text" class="text-xl md:text-3xl font-bold mb-10 leading-tight"></h2>
+            
+            <div id="options-grid" class="grid grid-cols-1 md:grid-cols-2 gap-4"></div>
+        </div>
+
+        <div class="mt-8 bg-slate-800 h-3 rounded-full overflow-hidden border border-slate-700">
+            <div id="progress-bar" class="bg-gradient-to-r from-blue-500 to-emerald-500 h-full transition-all duration-500" style="width: 0%"></div>
         </div>
     </div>
 
     <script>
         const quizData = [
-            // SET 1: DIGITAL HORIZON
-            { set: "Digital Horizon", q: "What is the official IMO acronym for autonomous ships?", options: ["MARS", "MASS", "AUTO-SHIP", "SSS"], a: "B) MASS" },
-            { set: "Digital Horizon", q: "Which level of autonomy defines a ship that is 'fully autonomous' with no crew on board?", options: ["Degree 1", "Degree 2", "Degree 3", "Degree 4"], a: "D) Degree 4" },
-            // SET 3: INDIAN MARITIME (From your doc)
-            { set: "Indian Maritime", q: "Who is India’s current Union Minister for Ports, Shipping & Waterways?", options: ["Nitin Gadkari", "Sarbananda Sonowal", "Rajnath Singh", "S. Jaishankar"], a: "B) Sarbananda Sonowal" },
-            { set: "Indian Maritime", q: "Which port is India’s largest container port by throughput?", options: ["Mundra", "JNPA", "Chennai", "Vizag"], a: "B) JNPA" },
-            { set: "Indian Maritime", q: "When is National Maritime Day celebrated in India?", options: ["Jan 26", "April 5th", "Aug 15", "Dec 4"], a: "B) April 5th" }
-            // Add more questions here following this format...
+            { set: "Digital Horizon", q: "What is the official IMO acronym for autonomous ships?", options: ["MARS", "MASS", "AUTO-SHIP", "SSS"], a: 1 },
+            { set: "Digital Horizon", q: "Which level of autonomy defines a ship that is 'fully autonomous'?", options: ["Degree 1", "Degree 2", "Degree 3", "Degree 4"], a: 3 },
+            { set: "Indian Maritime", q: "Who is India’s current Union Minister for Ports, Shipping & Waterways?", options: ["Nitin Gadkari", "Sarbananda Sonowal", "Rajnath Singh", "S. Jaishankar"], a: 1 },
+            { set: "Indian Maritime", q: "Which port is India’s largest container port by throughput?", options: ["Mundra", "JNPA", "Chennai", "Vizag"], a: 1 },
+            { set: "Indian Maritime", q: "When is National Maritime Day celebrated in India?", options: ["Jan 26", "April 5th", "Aug 15", "Dec 4"], a: 1 },
+            { set: "Global Trivia", q: "Which canal connects the Mediterranean to the Red Sea?", options: ["Panama", "Suez Canal", "Kiel", "Corinth"], a: 1 },
+            { set: "Technical Deep Dive", q: "Which document must be produced to prove fuel Sulfur compliance?", options: ["Logbook", "BDN", "Bill of Lading", "Manifest"], a: 1 },
+            { set: "Regulations", q: "Which MARPOL Annex deals with prevention of air pollution?", options: ["Annex I", "Annex VI", "Annex IV", "Annex II"], a: 1 }
+            // Add all remaining 53 questions here using the 0-indexed 'a' (0=A, 1=B, 2=C, 3=D)
         ];
 
+        // I have pre-filled a few samples. You can add the rest of the 60 questions using the index (0 for A, 1 for B, etc.)
+
         let currentQ = 0;
+        let strikes = 0;
+        let canClick = true;
 
         function loadQuestion() {
             const data = quizData[currentQ];
+            const labels = ['A', 'B', 'C', 'D'];
+            strikes = 0;
+            canClick = true;
+            
+            document.getElementById('strike-1').className = "w-8 h-8 rounded-full border-2 border-slate-600 flex items-center justify-center font-bold";
+            document.getElementById('strike-2').className = "w-8 h-8 rounded-full border-2 border-slate-600 flex items-center justify-center font-bold";
             document.getElementById('set-name').innerText = data.set;
-            document.getElementById('question-number').innerText = `Q ${currentQ + 1} / ${quizData.length}`;
+            document.getElementById('question-counter').innerText = `${currentQ + 1} / ${quizData.length}`;
             document.getElementById('question-text').innerText = data.q;
-            document.getElementById('correct-text').innerText = data.a;
-            document.getElementById('answer-box').classList.remove('show');
+            
+            const progress = ((currentQ + 1) / quizData.length) * 100;
+            document.getElementById('progress-bar').style.width = progress + '%';
 
             const grid = document.getElementById('options-grid');
             grid.innerHTML = '';
-            const labels = ['A', 'B', 'C', 'D'];
             data.options.forEach((opt, i) => {
-                grid.innerHTML += `<div class="bg-slate-700/50 p-4 rounded-lg border border-slate-600">${labels[i]}) ${opt}</div>`;
+                const btn = document.createElement('div');
+                btn.className = "option-btn bg-slate-700/40 p-5 rounded-2xl border-2 border-slate-600/50 text-lg font-medium";
+                btn.innerHTML = `<span class="text-blue-400 font-black mr-2">${labels[i]})</span> ${opt}`;
+                btn.onclick = () => handleChoice(i, btn);
+                grid.appendChild(btn);
             });
         }
 
-        function toggleAnswer() {
-            document.getElementById('answer-box').classList.toggle('show');
+        function handleChoice(index, element) {
+            if (!canClick || element.classList.contains('wrong') || element.classList.contains('correct')) return;
+
+            const correctIndex = quizData[currentQ].a;
+
+            if (index === correctIndex) {
+                element.classList.add('correct');
+                canClick = false;
+                setTimeout(nextQuestion, 1500);
+            } else {
+                strikes++;
+                element.classList.add('wrong');
+                triggerShake();
+                updateStrikes();
+                
+                if (strikes >= 2) {
+                    canClick = false;
+                    highlightCorrect();
+                    setTimeout(nextQuestion, 2000);
+                }
+            }
+        }
+
+        function highlightCorrect() {
+            const btns = document.getElementsByClassName('option-btn');
+            btns[quizData[currentQ].a].classList.add('correct');
+        }
+
+        function updateStrikes() {
+            if (strikes >= 1) document.getElementById('strike-1').classList.add('bg-red-600', 'border-red-600');
+            if (strikes >= 2) document.getElementById('strike-2').classList.add('bg-red-600', 'border-red-600');
+        }
+
+        function triggerShake() {
+            const card = document.getElementById('question-card');
+            card.classList.add('shake');
+            setTimeout(() => card.classList.remove('shake'), 400);
         }
 
         function nextQuestion() {
@@ -80,7 +134,7 @@
                 currentQ++;
                 loadQuestion();
             } else {
-                alert("Quiz Completed!");
+                alert("Quiz Over! You are a Maritime Legend.");
             }
         }
 
